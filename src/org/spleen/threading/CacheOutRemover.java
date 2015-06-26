@@ -1,6 +1,6 @@
 package org.spleen.threading;
 
-import org.spleen.collection.NamespaceMap;
+import org.spleen.collection.CacheRemoveable;
 import org.spleen.type.CacheObject;
 
 /**
@@ -18,24 +18,24 @@ import org.spleen.type.CacheObject;
 public class CacheOutRemover implements Runnable {
 
 	private boolean stop = false;
-	private NamespaceMap observable;
+	private CacheRemoveable observable;
 	
 	/**
 	 * Default constructor.
 	 * 
-	 * Construct and refer the NamespaceMap as
+	 * Construct and refer the CacheRemoveable as
 	 * observable parent to remove CacheObjects.
 	 * 
-	 * @param observable	The NamespaceMap parent.
+	 * @param observable	The CacheRemoveable parent.
 	 */
-	public CacheOutRemover(NamespaceMap observable) {
+	public CacheOutRemover(CacheRemoveable observable) {
 		this.observable = observable;
 	}
 	
 	/**
 	 * Run observer.
 	 * 
-	 * Observe NamespaceMap and automatically
+	 * Observe CacheRemoveable and automatically
 	 * remove out of date object and objects in 
 	 * order of insertion if the memory
 	 * space allowed by the configuration is
