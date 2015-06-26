@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.spleen.collection.NamespaceInterface;
 import org.spleen.collection.NamespaceMap;
+import org.spleen.collection.NamespaceMultiThread;
 import org.spleen.config.SpleenConfigurator;
 import org.spleen.type.CacheObject;
 import org.spleen.type.Sizeable;
@@ -42,6 +43,22 @@ public class Spleen implements Sizeable {
 	public void createNamespace(String key, SpleenConfigurator config){
 		if(!this.namespacesObjects.containsKey(key)){
 			this.namespacesObjects.put(key, (new NamespaceMap(config)));
+		}
+	}
+
+	/**
+	 * Create a new multi-threaded namespace.
+	 * 
+	 * Create a new multi-threaded
+	 * NamespaceMap and tell it the 
+	 * configuration.
+	 * 
+	 * @param key		The new namespace identifier.
+	 * @param config	The new namespace configuration.
+	 */
+	public void createNamespace(int threadCount, String key, SpleenConfigurator config){
+		if(!this.namespacesObjects.containsKey(key)){
+			this.namespacesObjects.put(key, (new NamespaceMultiThread(threadCount, config)));
 		}
 	}
 	

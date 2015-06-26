@@ -4,6 +4,15 @@ import org.spleen.config.SpleenConfigurator;
 import org.spleen.type.CacheObject;
 import org.spleen.type.Sizeable;
 
+/**
+ * CacheRemoveable interface.
+ * 
+ * This interface define the methods
+ * used by the cache object remover.
+ * 
+ * @author vallance
+ *
+ */
 public interface CacheRemoveable extends Sizeable {
 
 	
@@ -24,7 +33,7 @@ public interface CacheRemoveable extends Sizeable {
 	 * identifier.
 	 * 
 	 * @param key	The cached object identifier.
-	 * @return		The cached object.
+	 * @return		The cached object or null if not exist.
 	 */
 	public CacheObject get(Object key);
 	
