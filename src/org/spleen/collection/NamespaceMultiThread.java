@@ -6,7 +6,6 @@ package org.spleen.collection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
 
 import org.spleen.config.SpleenConfigurator;
 import org.spleen.type.CacheContainer;
