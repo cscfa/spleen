@@ -1,4 +1,4 @@
-package org.spleen.testUnit;
+package org.spleen.JUnit;
 
 import static org.junit.Assert.*;
 
