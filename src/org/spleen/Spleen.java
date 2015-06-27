@@ -120,7 +120,7 @@ public class Spleen implements Sizeable {
 	 */
 	public void put(String namespaceKey, String key, CacheObject obj){
 		if(this.namespacesObjects.containsKey(namespaceKey)){
-			this.namespacesObjects.get(namespaceKey).add(key, obj);;
+			this.namespacesObjects.get(namespaceKey).add(key, obj);
 		}
 	}
 

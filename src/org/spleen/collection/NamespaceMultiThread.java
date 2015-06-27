@@ -4,11 +4,11 @@
 package org.spleen.collection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import org.spleen.config.SpleenConfigurator;
-import org.spleen.threading.CacheOutRemover;
 import org.spleen.type.CacheContainer;
 import org.spleen.type.CacheObject;
 
@@ -20,7 +20,8 @@ public class NamespaceMultiThread implements NamespaceInterface {
 
 	protected SpleenConfigurator config;
 	protected ArrayList<CacheContainer> cacheContainers;
-	protected LinkedList<Integer> cacheObjectOrder;
+	protected LinkedList<String> cacheObjectOrder;
+	protected HashMap<String, Integer> cacheObjectMapping;
 	private int containerCount = 1;
 	private double size = 0;
 	private int containerTarget = 0;
@@ -32,7 +33,8 @@ public class NamespaceMultiThread implements NamespaceInterface {
 		this.containerCount = containerCount;
 		this.config = config;
 		this.cacheContainers = new ArrayList<CacheContainer>();
-		this.cacheObjectOrder = new LinkedList<Integer>();
+		this.cacheObjectOrder = new LinkedList<String>();
+		this.cacheObjectMapping = new HashMap<String, Integer>();
 		
 		for(int i = 0;i < containerCount;i++){
 			this.cacheContainers.add(new CacheContainer(this));
@@ -83,6 +85,10 @@ public class NamespaceMultiThread implements NamespaceInterface {
 	public void remove(Object key) {
 		for (CacheContainer cacheContainer : this.cacheContainers) {
 			if(cacheContainer.get(key) != null){
+				
+				this.cacheObjectOrder.remove(this.cacheObjectMapping.get(key));
+				this.cacheObjectMapping.remove(key);
+				
 				this.size -= cacheContainer.get(key).getSize();
 				cacheContainer.remove(key);
 			}else{
@@ -96,8 +102,20 @@ public class NamespaceMultiThread implements NamespaceInterface {
 	 */
 	@Override
 	public void removeFirst() {
-		this.cacheContainers.get(this.cacheObjectOrder.getFirst()).removeFirst();
+		String firstKey = this.cacheContainers.get(Integer.valueOf(this.cacheObjectOrder.getFirst())).getCacheObjectOrder().getFirst();
+		
+		this.size -= this.cacheContainers.get(Integer.valueOf(this.cacheObjectOrder.getFirst())).get(firstKey).getSize();
+		this.cacheContainers.get(Integer.valueOf(this.cacheObjectOrder.getFirst())).removeFirst();
 		this.cacheObjectOrder.removeFirst();
+		
+		Object[] keySet = this.cacheObjectMapping.keySet().toArray();
+		for (Object object : keySet) {
+			if(this.cacheObjectMapping.get(object.toString()) > 0){
+				this.cacheObjectMapping.put(object.toString(), (this.cacheObjectMapping.get(object.toString()) - 1));
+			}else{
+				this.cacheObjectMapping.remove(object.toString());
+			}
+		}
 	}
 
 	/**
@@ -140,6 +158,9 @@ public class NamespaceMultiThread implements NamespaceInterface {
 			this.containerTarget = 0;
 		}
 
+		this.cacheObjectMapping.put(key, this.cacheObjectOrder.size());
+		this.cacheObjectOrder.add(String.valueOf(this.containerTarget));
+		this.size += cacheObject.getSize();
 		this.cacheContainers.get(this.containerTarget).add(key, cacheObject);
 	}
 
@@ -181,7 +202,7 @@ public class NamespaceMultiThread implements NamespaceInterface {
 	 */
 	@Override
 	public LinkedList<String> getCacheObjectOrder() {
-		return null;
+		return this.cacheObjectOrder;
 	}
 
 }

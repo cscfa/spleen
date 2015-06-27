@@ -51,8 +51,8 @@ public class CacheOutRemover implements Runnable {
 
 			for (Object key : observablesKeys) {
 				CacheObject objTmp = this.observable.get(key);
-				
-				if(System.currentTimeMillis() > objTmp.getTimeOut()){
+
+				if(objTmp != null && System.currentTimeMillis() > objTmp.getTimeOut()){
 					this.observable.remove(key);
 				}
 			}
